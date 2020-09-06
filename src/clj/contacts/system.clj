@@ -37,6 +37,8 @@
   (ig/init system-config))
 
 (comment
+  ;; TODO: Ver como tener una referencia a lo que seria el ::handler para poder hacer
+  ;; (app {:request-method :post :uri "/api/contacts/"})
   (def system (ig/init system-config))
   (ig/halt! system)
   )

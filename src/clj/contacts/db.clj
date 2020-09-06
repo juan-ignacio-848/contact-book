@@ -21,6 +21,20 @@
                          :values      [[first_name last_name email]]})]
     (jdbc/execute! db sql)))
 
+(defn delete [parameters]
+  (let [db (get parameters :db)
+        id (get-in parameters [:path :id])]
+    (jdbc/execute! db (sql/format {:delete-from :contacts
+                                   :where       [:= :id id]}))))
+(defn update [parameters]
+  (let [db   (get parameters :db)
+        id   (get-in parameters [:path :id])
+        data (get parameters :body)
+        data (assoc data :id id)]
+    (println data)
+    (jdbc/execute! db (sql/format {:update :contacts
+                                   :set    data
+                                   :where  [:= :id id]}))))
 (comment
   (def db {:dbtype "h2" :dbname "clj_contacts"})
   (def ds (jdbc/get-datasource db))
@@ -43,6 +57,8 @@
  email TEXT,
  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp)")
   ds
+  (jdbc/execute! ds (sql/format {:delete-from :contacts :where [:= :id 3]}))
+  (jdbc/execute! ds (sql/format {:update :contacts :set {} :where [:= :id 3]}))
   (jdbc/execute! ds (sql/format {:insert-into :contacts
                                  :columns     [:first-name
                                                :last-name
@@ -52,6 +68,7 @@
   (helpers/insert-into :contacts)
   (helpers/columns :first-name :last-name :email)
   (helpers/values [["a" "b" "c"]])
+  (helpers/sset {:a 1})
   )
 (comment
   (sql/format {:select [:a :b :c] :from [:foo] :where [:and [:= :foo/a "baz"] [:= :foo/b "boz"]]})

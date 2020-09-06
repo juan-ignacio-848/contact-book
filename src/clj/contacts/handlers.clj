@@ -7,5 +7,11 @@
 (defn get-by-id [parameters]
   (contacts-db/get-by-id parameters))
 
-(defn create [req]
-  (contacts-db/create req))
+(defn create [parameters]
+  (contacts-db/create parameters))
+
+(defn delete [parameters]
+  (contacts-db/delete parameters))
+
+(defn update [parameters]
+  (contacts-db/update parameters))
